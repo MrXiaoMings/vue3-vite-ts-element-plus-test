@@ -14,8 +14,7 @@
     "noEmit": true,
     "types": [
       "node",
-      "webpack-env",
-      "module"
+      "webpack-env"
     ]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
