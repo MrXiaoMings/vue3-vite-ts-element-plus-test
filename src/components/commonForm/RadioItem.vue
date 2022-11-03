@@ -1,5 +1,5 @@
 <template>
-    <el-form-item :label="itemJsonData.labelName">
+    <el-form-item :label="itemJsonData.labelName" :prop="itemJsonData.valueName">
       <el-radio-group v-model="commonData[itemJsonData.valueName]">
         <el-radio :label="item.label" :value="item.value" :key="index" v-for="(item, index) in itemJsonData.options" />
       </el-radio-group>

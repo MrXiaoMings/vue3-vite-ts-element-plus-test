@@ -1,14 +1,19 @@
 <template>
-<el-form :model="commonData" label-width="120px" ref="commonFormRef">
+<el-form :model="commonData" label-width="120px" ref="commonFormRef" class="common-form">
   <template v-for="(item, index) in formData">
-    <component :is="componentNames[item.type]" :itemJsonData="item" :commonData="commonData" />
+    <component :is="componentNames[item.type]" :itemJsonData="item" :valueName="item.valueName" :commonData="commonData" />
   </template>
+  <el-form-item>
+    <el-button type="primary" @click="submitForm(commonFormRef)">提交</el-button>
+    <el-button @click="resetForm(commonFormRef)">Reset</el-button>
+  </el-form-item>
 </el-form>
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, onMounted, defineAsyncComponent, reactive } from "vue"
+import { onBeforeMount, onMounted, defineAsyncComponent, reactive, shallowRef, ref } from "vue"
 import { formData } from '../mock/formJson.mock'
+import type { FormInstance } from 'element-plus'
 const formComponents = import.meta.globEager('./commonForm/*Item.vue')
 console.log('formData', formData)
 const modules = Object.keys(formComponents).reduce(
@@ -23,18 +28,51 @@ console.log(modules)
 // 动态加载组件
 let componentNames: any = reactive({})
 Object.keys(modules).map((key: string) => {
-  componentNames[modules[key].name] = defineAsyncComponent(() => import(`./commonForm/${modules[key].name}.vue`))
+  componentNames[modules[key].name] = shallowRef(defineAsyncComponent(() => import(`./commonForm/${modules[key].name}.vue`)))
 })
 // section data
-const commonData: object = reactive({})
+const commonFormRef = ref<FormInstance>()
+const commonData: any = reactive({})
+formData.forEach((formItem: any, index: number) => {
+  switch (formItem.type) {
+    case 'CheckBoxItem':
+      commonData[formItem.valueName] = []
+          break
+    default:
+      commonData[formItem.valueName] = null
+          break
+  }
+})
+// section methods
+const submitForm = (commonFormRef: FormInstance | undefined) => {
+  if (!commonFormRef) return
+  commonFormRef.validate((valid) => {
+    if (valid) {
+      console.log('submit!')
+    } else {
+      console.log('error submit!')
+      return false
+    }
+  })
+}
+const resetForm = (commonFormRef: FormInstance | undefined) => {
+  if (!commonFormRef) return
+  commonFormRef.resetFields()
+}
+// section beforeMount
 onBeforeMount(() => {
   console.log('beforeMounted')
 })
+// section mounted
 onMounted(() => {
   console.log('mounted')
 })
 </script>
 
 <style scoped lang="scss">
-
+.common-form {
+  ::v-deep .el-form-item__content {
+    flex: none;
+  }
+}
 </style>

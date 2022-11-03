@@ -1,5 +1,8 @@
 <template>
-<el-form-item :label="itemJsonData.labelName">
+<el-form-item
+    class="auto-select"
+    :label="itemJsonData.labelName"
+    :prop="itemJsonData.valueName">
   <el-select v-model="commonData[itemJsonData.valueName]" :placeholder="itemJsonData.placeholder">
     <el-option :label="item.label" :value="item.value" :key="index" v-for="(item, index) in itemJsonData.options" />
   </el-select>
@@ -27,6 +30,7 @@ defineOptions({
 })
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.auto-select {
+}
 </style>
