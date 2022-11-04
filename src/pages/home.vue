@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import HelloWorld from '../components/HelloWorld.vue'
-const msg = 'This is msg content!'
-const tips = 'tips content!'
+import FormConfig from '../components/FormConfig.vue'
 </script>
 
 <template>
-<HelloWorld :msg="msg" :tips="tips"></HelloWorld>
+<FormConfig></FormConfig>
 </template>
 
 <style scoped>

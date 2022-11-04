@@ -4,8 +4,7 @@ interface OptionsArr {
 }
 interface ValidateOption {
     validateFn: string,
-    arg?: Array<any>,
-    isRequired: boolean
+    arg?: Array<any>
 }
 interface FormJsonObj {
     type: string,
@@ -27,8 +26,7 @@ export const formData: Array<FormJsonObj> = [
         "defaultValue": null,
         validateArr: [
             {
-                validateFn: 'checkCharacters',
-                isRequired: true
+                validateFn: 'checkCharacters'
             }
         ]
     },
