@@ -1,6 +1,11 @@
 <template>
   <div class="drawer-config-container">
-    <el-drawer v-model="configVisible" direction="rtl" size="40%">
+    <el-drawer
+        v-model="configVisible"
+        :close-on-press-escape="false"
+        :before-close="(done) => { configVisible = false; done();}"
+        direction="rtl"
+        size="40%">
       <template #title>
         <h4>表单模版配置</h4>
       </template>
@@ -31,15 +36,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, withDefaults, defineEmits } from 'vue'
+import {ref, reactive, watch, defineProps} from 'vue'
 import bus from '../utils/Bus'
-interface PropItemConfig {
-  configVisible: boolean
+interface ConfigVisibleOut {
+  configVisibleOut: boolean
 }
-const props = withDefaults(defineProps<PropItemConfig>(), {
-  configVisible: false
-})
+const props = defineProps<ConfigVisibleOut>()
 // section data
+const configVisible = ref(true)
+// section watch
+watch(() => props.configVisibleOut, (newVal: boolean) => {
+  configVisible.value = true
+}, {
+  immediate: true
+})
 const formItemOptions = reactive([
   {
     label: '输入框',
@@ -49,10 +59,10 @@ const formItemOptions = reactive([
 const configForm = reactive({
   formItemType: ''
 })
-const emits = defineEmits(['configVisibleChange', 'dialogVisibleChange'])
+const emits = defineEmits([ 'dialogVisibleChange'])
 // section event
 const cancelFormConfig = () => { // 取消设置
-  emits('configVisibleChange', false)
+  configVisible.value = false
 }
 const itemConfigInfo = () => {
   bus.$emit('dialogVisibleChange', true)

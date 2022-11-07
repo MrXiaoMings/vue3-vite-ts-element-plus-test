@@ -6,8 +6,7 @@
     </div>
     <div class="form-right-config">
       <FormDrawerConfig
-          @configVisibleChange="configVisibleChange"
-          :configVisible="configVisible">
+          :configVisibleOut="configVisibleOut">
       </FormDrawerConfig>
     </div>
     <div class="config-dialog">
@@ -16,18 +15,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import CommonForm from './Form.vue'
 import FormDrawerConfig from './FormDrawerConfig.vue'
 import FormItemConfigDialog from './FormItemConfigDialog.vue'
 // section data
-const configVisible = ref(true)
+const configVisibleOut = ref(false)
+console.log(configVisibleOut.value)
 // section event
 const addFormConfig = () => {
   configVisible.value = true
-}
-const configVisibleChange = (visible) => {
-  configVisible.value = visible
 }
 </script>
 <style scoped lang="scss">

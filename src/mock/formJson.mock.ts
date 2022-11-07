@@ -10,6 +10,7 @@ interface FormJsonObj {
     type: string,
     labelName: string,
     valueName: any,
+    tipText?: string,
     placeholder?: string,
     isRequired?: boolean,
     defaultValue?: any,

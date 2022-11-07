@@ -16,14 +16,15 @@ defineOptions({
   name: 'FormItemConfigDialog'
 })
 const emits = defineEmits(['itemConfigVisibleChange'])
-let itemType = ref(null)
+let itemType = ref('')
 let itemConfigVisible = ref(false)
 // section bus
-bus.$on('itemTypeChange', (itemTypeText) => {
+bus.$on('itemTypeChange', (itemTypeText: string) => {
   itemType.value = itemTypeText
 })
-bus.$on('dialogVisibleChange', (visible) => {
-  itemConfigVisible.value = visible
+bus.$on('dialogVisibleChange', (itemType: boolean) => {
+  itemConfigVisible.value = itemType
+  console.log(itemType)
 })
 const formComponents = import.meta.globEager('./commonFormItemConfig/*Form.vue')
 console.log('formData', formData)
