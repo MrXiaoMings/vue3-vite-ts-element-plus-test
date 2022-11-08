@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, reactive, watch, defineProps} from 'vue'
+import {ref, reactive, watch, defineProps, defineEmits } from 'vue'
 import bus from '../utils/Bus'
 interface ConfigVisibleOut {
   configVisibleOut: boolean
@@ -45,8 +45,13 @@ const props = defineProps<ConfigVisibleOut>()
 // section data
 const configVisible = ref(true)
 // section watch
-watch(() => props.configVisibleOut, (newVal: boolean) => {
-  configVisible.value = true
+watch([() => props.configVisibleOut, configVisible], ([newVal, visible], [oldVal, preVisible]) => {
+  if (newVal) {
+    configVisible.value = true
+  }
+  if (!visible) {
+    emits('visibleFalse')
+  }
 }, {
   immediate: true
 })
@@ -59,7 +64,8 @@ const formItemOptions = reactive([
 const configForm = reactive({
   formItemType: ''
 })
-const emits = defineEmits([ 'dialogVisibleChange'])
+// section emits
+const emits = defineEmits([ 'dialogVisibleChange', 'visibleFalse'])
 // section event
 const cancelFormConfig = () => { // 取消设置
   configVisible.value = false

@@ -6,7 +6,8 @@
     </div>
     <div class="form-right-config">
       <FormDrawerConfig
-          :configVisibleOut="configVisibleOut">
+          :configVisibleOut="configVisibleOut"
+          @visibleFalse="visibleFalse">
       </FormDrawerConfig>
     </div>
     <div class="config-dialog">
@@ -24,7 +25,10 @@ const configVisibleOut = ref(false)
 console.log(configVisibleOut.value)
 // section event
 const addFormConfig = () => {
-  configVisible.value = true
+  configVisibleOut.value = true
+}
+const visibleFalse = () => {
+  configVisibleOut.value = false
 }
 </script>
 <style scoped lang="scss">
