@@ -1,6 +1,6 @@
 <template>
 <div class="input-item-form">
-  <el-form :model="inputFormData" :rules="formItemRules" ref="inputForm" :label-width="120">
+  <el-form :model="inputFormData" :rules="formItemRules" ref="inputFormRef" :label-width="120">
     <el-form-item label="字段中文展示" prop="labelName">
       <el-input size="small" v-model="inputFormData.labelName" autocomplete="off" />
     </el-form-item>
@@ -27,7 +27,8 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
 defineOptions({
   name: 'InputItemForm'
 })
@@ -52,6 +53,7 @@ interface InputFormType {
   validateArr?: Array<ValidateOption>
 }
 const inputFormData: InputFormType = reactive({
+  type: 'InputItem',
   labelName: '',
   valueName: null,
   placeholder: '',
@@ -61,6 +63,7 @@ const inputFormData: InputFormType = reactive({
 const initValidateObj: ValidateOption = {
   validateFn: ''
 }
+const inputFormRef = ref<FormInstance>()
 const ruleOptions: Array<OptionsArr> = reactive([
   {
     label: '只能输中文',
@@ -71,7 +74,7 @@ const ruleOptions: Array<OptionsArr> = reactive([
     value: 'regInternetAd'
   }
 ])
-const formItemRules = {
+const formItemRules = reactive<FormRules>({
   labelName: [
     { required: true, message: '请输入字段中文展示', trigger: ['blur', 'change'] }
   ],
@@ -81,7 +84,7 @@ const formItemRules = {
   isRequired: [
     { required: true, message: '请选择是否必填', trigger: 'change' }
   ]
-}
+})
 // section event
 const addRule = () => {
   const tmpInitObj = JSON.parse(JSON.stringify(initValidateObj))
@@ -93,8 +96,25 @@ const addRule = () => {
   }
 }
 const deleteValidateRule = (index: number) => {
-  inputFormData.validateArr.splice(index, 1)
+  Array.isArray(inputFormData.validateArr) && inputFormData.validateArr.splice(index, 1)
 }
+const validateForm = (inputFormRef: FormInstance | undefined) => {
+  return new Promise((resolve, reject) => {
+    if (!inputFormRef) reject(inputFormRef)
+    inputFormRef.validate((valid: boolean) => {
+      if (valid) {
+        resolve(inputFormData)
+      } else {
+        reject(valid)
+      }
+    })
+  })
+}
+
+defineExpose({
+  validateForm,
+  inputFormRef
+})
 </script>
 
 <style scoped lang="scss">

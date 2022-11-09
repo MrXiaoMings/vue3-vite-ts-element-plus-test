@@ -4,12 +4,14 @@
     :prop="itemJsonData.valueName"
     :rules="rules">
     <el-input v-model="commonData[itemJsonData.valueName]" :placeholder="itemJsonData.placeholder" />
+    <el-button size="small" @click="seeConfigInfo">查看配置信息</el-button>
   </el-form-item>
 </template>
 
 <script lang="ts" setup>
-import { watch, reactive } from 'vue'
+import { watch, reactive, defineEmits } from 'vue'
 import validateForm from "../../utils/validate";
+import bus from '../../utils/Bus'
 interface ItemJsonData {
   labelName: string,
   valueName: any,
@@ -47,8 +49,19 @@ watch(() => props.itemJsonData, (newVal, oldVal) => {
   immediate: true,
   deep: true
 })
+// section event
+const seeConfigInfo = () => {
+  bus.$emit('seeConfigInfo', props.itemJsonData)
+}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+::v-deep .el-form-item__content {
+  min-width: 600px;
+  .el-input {
+    width: 60%;
+    margin-right: 20px;
+  }
+}
 
 </style>

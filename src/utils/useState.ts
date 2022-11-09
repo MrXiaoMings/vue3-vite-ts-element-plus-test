@@ -1,0 +1,22 @@
+import { computed } from 'vue'
+import { mapState, useStore } from 'vuex'
+
+export const useState = (mapper: any[]) => {
+    // 拿到store独享
+    const store = useStore()
+
+    // 获取到对应的对象的functions: {name: function, age: function}
+    const storeStateFns = mapState(mapper)
+
+    console.log('storeStateFns', storeStateFns)
+
+    // 对数据进行转换
+    const storeState: any = {}
+    Object.keys(storeStateFns).forEach(fnKey => {
+        const fn = storeStateFns[fnKey].bind({$store: store})
+        storeState[fnKey] = computed(fn)
+    })
+
+    return storeState
+}
+

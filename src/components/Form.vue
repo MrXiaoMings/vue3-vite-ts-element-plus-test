@@ -1,7 +1,7 @@
 <template>
 <el-form :model="commonData" label-width="120px" ref="commonFormRef" class="common-form">
-  <template v-for="(item, index) in formData">
-    <component :is="componentNames[item.type]" :itemJsonData="item" :valueName="item.valueName" :commonData="commonData" />
+  <template v-for="(item, index) in formInfoData">
+    <component :is="componentNames[item.type]" :itemJsonData="item" @seeConfigInfo="seeConfigInfo" :valueName="item.valueName" :commonData="commonData" />
   </template>
   <el-form-item>
     <el-button type="primary" @click="submitForm(commonFormRef)">提交</el-button>
@@ -11,11 +11,22 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeMount, onMounted, defineAsyncComponent, reactive, shallowRef, ref } from "vue"
-import { formData } from '../mock/formJson.mock'
+import {onBeforeMount, onMounted, defineAsyncComponent, reactive, shallowRef, ref, computed} from "vue"
+// import { formData } from '../mock/formJson.mock'
 import type { FormInstance } from 'element-plus'
+import { UseFormInfo } from "../store/cacheModules/form";
+// import { mapState } from "pinia";
+// import { useState } from "../utils/useState"
+
+// computed(() => {
+//   return {
+//     ...mapState(useFormInfo, ['formInfoData'])
+//   }
+// })
+const storeState = UseFormInfo()
+const formInfoData = reactive(storeState.$state.formInfoData)
+console.log('formData', formInfoData)
 const formComponents = import.meta.globEager('./commonForm/*Item.vue')
-console.log('formData', formData)
 const modules = Object.keys(formComponents).reduce(
     (modules: { [key: string]: any }, path: string) => {
       const moduleName = path.replace(/^\.\/modules\/(.*)\.\w+$/, '$1')
@@ -33,7 +44,7 @@ Object.keys(modules).map((key: string) => {
 // section data
 const commonFormRef = ref<FormInstance>()
 const commonData: any = reactive({})
-formData.forEach((formItem: any, index: number) => {
+formInfoData.forEach((formItem: any, index: number) => {
   switch (formItem.type) {
     case 'CheckBoxItem':
       commonData[formItem.valueName] = []
@@ -44,9 +55,14 @@ formData.forEach((formItem: any, index: number) => {
   }
 })
 // section methods
+/**
+ *@校验
+ *@author liminghui
+ *@date 2022-11-09 14:14:55
+ */
 const submitForm = (commonFormRef: FormInstance | undefined) => {
   if (!commonFormRef) return
-  commonFormRef.validate((valid) => {
+  commonFormRef.validate((valid: boolean) => {
     if (valid) {
       console.log('submit!')
     } else {
@@ -58,6 +74,9 @@ const submitForm = (commonFormRef: FormInstance | undefined) => {
 const resetForm = (commonFormRef: FormInstance | undefined) => {
   if (!commonFormRef) return
   commonFormRef.resetFields()
+}
+const seeConfigInfo = (itemInfo) => {
+
 }
 // section beforeMount
 onBeforeMount(() => {
