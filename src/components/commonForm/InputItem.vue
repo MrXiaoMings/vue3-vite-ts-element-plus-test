@@ -15,7 +15,9 @@ import bus from '../../utils/Bus'
 interface ItemJsonData {
   labelName: string,
   valueName: any,
-  placeholder?: string
+  placeholder?: string,
+  isRequired?: boolean,
+  validateArr: Array<any>
 }
 interface ItemProps {
   itemJsonData: ItemJsonData,

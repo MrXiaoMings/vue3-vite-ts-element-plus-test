@@ -24,9 +24,6 @@ import bus from '../utils/Bus'
 // section data
 const configVisibleOut = ref(false)
 console.log(configVisibleOut.value)
-bus.$on('seeConfigInfo', data => {
-  // 打开侧边栏，添加缓存
-})
 // section event
 const addFormConfig = () => {
   configVisibleOut.value = true
